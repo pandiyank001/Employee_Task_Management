@@ -1,98 +1,418 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Task Management System API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A robust, scalable Task Management System built with NestJS, TypeScript, and PostgreSQL. Features comprehensive authentication, task CRUD operations, and extensive API documentation.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Features
 
-## Description
+- **JWT Authentication** - Secure user registration and login
+- **Task Management** - Complete CRUD operations for tasks
+- **Advanced Filtering** - Filter tasks by status, due date, and more
+- **RESTful API Design** - Clean, intuitive API endpoints
+- **Swagger Documentation** - Interactive API documentation
+- **TypeScript** - Full type safety and modern JavaScript features
+- **Database Integration** - PostgreSQL with TypeORM
+- **Input Validation** - Comprehensive request validation
+- **Error Handling** - Structured error responses
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 📋 Table of Contents
 
-## Project setup
+- [Quick Start](#quick-start)
+- [API Endpoints](#api-endpoints)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Development](#development)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
 
-```bash
-$ npm install
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js (v16 or higher)
+- PostgreSQL (v12 or higher)
+- npm or yarn
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/task-management-api.git
+   cd task-management-api
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+
+4. **Set up the database**
+   ```bash
+   # Create database
+   createdb task_management
+   
+   # Run migrations
+   npm run migration:run
+   ```
+
+5. **Start the application**
+   ```bash
+   npm run start:dev
+   ```
+
+6. **Access the API**
+   - API Base URL: `http://localhost:3000/api/v1`
+   - Swagger Documentation: `http://localhost:3000/api`
+
+## 📊 API Endpoints
+
+### Authentication
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/auth/signup` | Register a new user | ❌ |
+| POST | `/auth/login` | Authenticate user and return JWT token | ❌ |
+
+### User Management
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/users/me` | Get logged-in user profile | ✅ |
+
+### Task Management
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| POST | `/tasks` | Create a new task | ✅ |
+| GET | `/tasks` | Get list of tasks (with optional filters) | ✅ |
+| GET | `/tasks/:id` | Get a single task by ID | ✅ |
+| PUT | `/tasks/:id` | Update task details | ✅ |
+| PATCH | `/tasks/:id/complete` | Mark a task as complete | ✅ |
+| DELETE | `/tasks/:id` | Delete a task | ✅ |
+
+### Query Parameters for GET /tasks
+- `status` - Filter by task status (PENDING, IN_PROGRESS, COMPLETED, CANCELLED)
+- `dueDate` - Filter by due date (YYYY-MM-DD)
+- `priority` - Filter by priority (LOW, MEDIUM, HIGH)
+- `page` - Page number for pagination (default: 1)
+- `limit` - Number of items per page (default: 10)
+
+## 🛠 Installation & Configuration
+
+### Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+# Database Configuration
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USERNAME=your_username
+DATABASE_PASSWORD=your_password
+DATABASE_NAME=task_management
+
+# JWT Configuration
+JWT_SECRET=your_super_secret_jwt_key
+JWT_EXPIRES_IN=24h
+
+# Application Configuration
+PORT=3000
+NODE_ENV=development
+
+# CORS Configuration (optional)
+CORS_ORIGIN=http://localhost:3000
 ```
 
-## Compile and run the project
+### Database Setup
+
+1. **Create PostgreSQL database**
+   ```bash
+   createdb task_management
+   ```
+
+2. **Run database migrations**
+   ```bash
+   npm run migration:run
+   ```
+
+3. **Seed database (optional)**
+   ```bash
+   npm run seed
+   ```
+
+## 👨‍💻 Development
+
+### Available Scripts
 
 ```bash
-# development
-$ npm run start
+# Development
+npm run start:dev          # Start with hot reload
+npm run start:debug        # Start with debugging
 
-# watch mode
-$ npm run start:dev
+# Building
+npm run build              # Build the application
+npm run start:prod         # Start production build
 
-# production mode
-$ npm run start:prod
+# Database
+npm run migration:generate # Generate new migration
+npm run migration:run      # Run migrations
+npm run migration:revert   # Revert last migration
+
+# Testing
+npm run test               # Run unit tests
+npm run test:e2e          # Run end-to-end tests
+npm run test:cov          # Run tests with coverage
+
+# Linting
+npm run lint              # Check linting
+npm run lint:fix          # Fix linting issues
 ```
 
-## Run tests
+### Project Structure
+
+```
+src/
+├── auth/                 # Authentication module
+│   ├── controllers
+│   ├── services
+│   ├── guards/
+│   └── dto/
+├── tasks/               # Task management module
+│   ├── controllers
+│   ├── services
+│   ├── entities/
+│   └── dto/
+├── users/               # User management module
+│   ├── controllers
+│   ├── services
+│   ├── entities/
+│   └── dto/
+├── common/              # Shared utilities
+│   ├── decorators/
+│   ├── interface/
+│   
+├── config/              # Configuration files
+└── main.ts              # Application bootstrap
+```
+
+## 🧪 Testing
+
+### Running Tests
 
 ```bash
-# unit tests
-$ npm run test
+# Unit tests
+npm run test
 
-# e2e tests
-$ npm run test:e2e
+# End-to-end tests
+npm run test:e2e
 
-# test coverage
-$ npm run test:cov
+# Test coverage
+npm run test:cov
+
+# Watch mode
+npm run test:watch
 ```
 
-## Deployment
+### Test Structure
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+- **Unit Tests**: Located alongside source files (`*.spec.ts`)
+- **E2E Tests**: Located in `test/` directory
+- **Test Database**: Uses separate test database configuration
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 📡 API Usage Examples
+
+### User Registration
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+curl -X POST http://localhost:3000/api/v1/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "securePassword123",
+    "firstName": "John",
+    "lastName": "Doe"
+  }'
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### User Login
 
-## Resources
+```bash
+curl -X POST http://localhost:3000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "securePassword123"
+  }'
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### Create Task
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+curl -X POST http://localhost:3000/api/v1/tasks \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -d '{
+    "title": "Complete project documentation",
+    "description": "Write comprehensive docs for the task management API",
+    "dueDate": "2024-12-31",
+    "priority": "HIGH"
+  }'
+```
 
-## Support
+### Get Tasks with Filters
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+curl -X GET "http://localhost:3000/api/v1/tasks?status=PENDING&priority=HIGH&page=1&limit=10" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
 
-## Stay in touch
+## 🚀 Deployment
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Docker Deployment
 
-## License
+1. **Build Docker image**
+   ```bash
+   docker build -t task-management-api .
+   ```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+2. **Run with Docker Compose**
+   ```bash
+   docker-compose up -d
+   ```
+
+### Production Deployment
+
+1. **Build the application**
+   ```bash
+   npm run build
+   ```
+
+2. **Set production environment variables**
+   ```bash
+   export NODE_ENV=production
+   export DATABASE_URL=your_production_db_url
+   export JWT_SECRET=your_production_jwt_secret
+   ```
+
+3. **Run migrations**
+   ```bash
+   npm run migration:run
+   ```
+
+4. **Start the application**
+   ```bash
+   npm run start:prod
+   ```
+
+### Environment-Specific Configurations
+
+- **Development**: Uses local PostgreSQL, detailed logging
+- **Staging**: Uses cloud database, moderate logging
+- **Production**: Uses production database, minimal logging, performance optimizations
+
+## 📚 Documentation
+
+### API Documentation
+
+- **Swagger UI**: Available at `/api` endpoint when running the application
+- **OpenAPI Spec**: Generated automatically from decorators and DTOs
+- **Postman Collection**: Available in `/docs` directory
+
+### Additional Documentation
+
+- [Functional Documentation](./docs/functional-documentation.md)
+- [API Flow Diagrams](./docs/api-flow-diagrams.md)
+- [Database Schema](./docs/database-schema.md)
+- [Authentication Guide](./docs/authentication.md)
+
+## 🔧 Configuration Options
+
+### JWT Configuration
+
+```typescript
+{
+  secret: process.env.JWT_SECRET,
+  expiresIn: process.env.JWT_EXPIRES_IN || '24h',
+  issuer: 'task-management-api',
+  audience: 'task-management-users'
+}
+```
+
+### Database Configuration
+
+```typescript
+{
+  type: 'postgres',
+  host: process.env.DATABASE_HOST,
+  port: parseInt(process.env.DATABASE_PORT, 10),
+  username: process.env.DATABASE_USERNAME,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_NAME,
+  synchronize: process.env.NODE_ENV === 'development',
+  logging: process.env.NODE_ENV === 'development'
+}
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Database Connection Issues**
+   - Verify PostgreSQL is running
+   - Check database credentials in `.env`
+   - Ensure database exists
+
+2. **JWT Token Issues**
+   - Verify JWT_SECRET is set
+   - Check token expiration
+   - Ensure proper Authorization header format
+
+3. **Port Conflicts**
+   - Change PORT in `.env` file
+   - Check if port is already in use
+
+### Debug Mode
+
+Run the application in debug mode:
+
+```bash
+npm run start:debug
+```
+
+Enable debug logging:
+
+```bash
+DEBUG=* npm run start:dev
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow TypeScript best practices
+- Write tests for new features
+- Update documentation as needed
+- Follow the existing code style
+- Use conventional commit messages
+
+
+## 🙏 Acknowledgments
+
+- [NestJS](https://nestjs.com/) - The progressive Node.js framework
+- [TypeORM](https://typeorm.io/) - ORM for TypeScript and JavaScript
+- [PostgreSQL](https://www.postgresql.org/) - The world's most advanced open source database
+- [JWT](https://jwt.io/) - JSON Web Token standard
+
+
+
+**Happy Coding! 🚀**

@@ -1,7 +1,20 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Get, UseGuards } from '@nestjs/common';
+import { 
+  Controller, 
+  Post, 
+  Body, 
+  HttpCode, 
+  HttpStatus, 
+  Get, 
+  UseGuards,
+  HttpException,
+  InternalServerErrorException,
+  BadRequestException
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignupDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
+import { AuthResponseDto } from './dto/auth-response.dto';
+import { UserProfileDto } from './dto/user-profile.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { User } from '../users/entities/user.entity';
@@ -13,26 +26,28 @@ export class AuthController {
 
   @Public()
   @Post('signup')
-  async signup(@Body() signupDto: SignupDto) {
-    return this.authService.signup(signupDto);
+  async signup(@Body() signupDto: SignupDto): Promise<AuthResponseDto> {
+    try {
+      return await this.authService.signup(signupDto);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Failed to create account');
+    }
   }
 
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() loginDto: LoginDto) {
-    return this.authService.login(loginDto);
-  }
-
-  @Get('profile')
-  @UseGuards(JwtAuthGuard)
-  getProfile(@GetUser() user: User) {
-    return {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      createdAt: user.createdAt,
-    };
+  async login(@Body() loginDto: LoginDto): Promise<AuthResponseDto> {
+    try {
+      return await this.authService.login(loginDto);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new InternalServerErrorException('Login failed');
+    }
   }
 }
